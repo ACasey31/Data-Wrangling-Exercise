@@ -1,64 +1,89 @@
-#Rename the variables in X_test and X_train with the data from features
-#First,create factor with new variable names in features
-features<-features$V2
-#Rename the variables in X_test and X_train with features.
-names(X_test)<-features
-names(X_train)<-features
 
-#Merge data sets that have matching number of variables.
+#Load all 8 files from original dataset
+ subject_test <- read.table("~/GitHub/Data-Wrangling-Ex.3/subject_test.txt", quote="\"", comment.char="")
+   View(subject_test)
+ subject_train <- read.table("~/GitHub/Data-Wrangling-Ex.3/subject_train.txt", quote="\"", comment.char="")
+   View(subject_train)
+ y_test <- read.table("~/GitHub/Data-Wrangling-Ex.3/y_test.txt", quote="\"", comment.char="")
+   View(y_test)
+ y_train <- read.table("~/GitHub/Data-Wrangling-Ex.3/y_train.txt", quote="\"", comment.char="")
+   View(y_train)
+ X_test <- read.table("~/GitHub/Data-Wrangling-Ex.3/X_test.txt", quote="\"", comment.char="", stringsAsFactors=FALSE)
+View(X_test)
+ X_train <- read.table("~/GitHub/Data-Wrangling-Ex.3/X_train.txt", quote="\"", comment.char="")
+   View(X_train)
+ activity_labels <- read.table("~/Downloads/UCI HAR Dataset/activity_labels.txt", quote="\"", comment.char="", stringsAsFactors=FALSE)
+   View(activity_labels)
+ features <- read.table("~/Downloads/UCI HAR Dataset/features.txt", quote="\"", comment.char="", stringsAsFactors=FALSE)
+   View(features)
+   
+# 1. Merge all train and test data into one dataset.
+#Begin with data sets that have matching number of variables.
+   
 #Subject_test and subject_train both have 1 variable.
-Bind_rows(subject_test,subject_train)
+load(dplyr)
+Subject<-bind_rows(subject_test,subject_train)
 
 #Do the same with y_test and y_train since they also have 1 variable each.
-Bind_rows(y_test, y_train)
+Y<-bind_rows(y_test, y_train)
 
-#x_test and X-train each have 561 variables. Merge these together as well.
-Bind_rows(x_test, X_train)
+#x_test and X-train each have 561 variables. 
+X<-rbind(X_test, X_train)
 
-#We need to change the data in y_train and y_test to it's appropriate activity from the data in activity_labels
-#First, create a look up table with data from activity-labels
-lut<-c("1"="WALKING", 
-       "2"="WALKING_UPSTAIRS", 
-       "3"="WALKING_DOWNSTAIRS",
-       "4"="SITTING", 
-       "5"="STANDING",
-       "6"="LAYING")
-#Then isolate the variable we want to change from y_test and y_train.
-test_V1<-y_test$V1
-train_V1<-y_train$V1
-#Apply the look up table to these new objects
-test_V1<-lut[test_V1]
-train_V1<-lut[train_V1]
-#The number of observations in test_V1 and train_V1 matches the number of observations in X_test and X_train.Let's add these as new variables to X-test andX_train. 
-#Create a new column called ActivityLabel containing y_test and add to X_test
-X-test$ActivityLabel<-y_test$V1
+#features has the same number of variables as X datasets.
+#Rename columns with data from features respectively.
+f<-features$V2
+names(X)<-f
 
-#Do the same with the data for y_train into X-train
-X-train$ActivityLabel<-y_train$V1
+#Combine all into one data frame called new_df.
+new_df<-data.frame(c(X, Y, Subject))
+#Rename columns in new dataset for clarity.
+names(new_df[562:563])
+names(new_df)[562]<-"y_data"
+names(new_df)[563]<-"subject_data"
 
-#Add subject_train into a column of X_train
-X_train$Subject<-subject_train$V1
-
-#Add subject_test data into a new column of X_test
-X_test$Subject<-subject_test$V1
-
-#Merge X_test with X_train. 
+# 2. Extract columns containing mean and standard deviation for each measurement. 
 library(dplyr)
-Whole_df<-bind_rows(X-test,X_train)
+mean_df<-select(new_df, contains("mean", ignore.case = TRUE))
+std_df<-select (new_df, contains("std", ignore.case = TRUE))
+measurements<-data.frame(c(mean_df, std_df))
 
-#Extract the variables containing mean, standard deviation for each measurement. 
-library(dplyr)
-select(Whole_df, contains("mean"), 
-                 contains("Mean"), 
-                 contains("std"))
-#Create new variable Activity_Name that shows the corresponding activity name based on data found in activity_labels
-#First, create a look up table with data from activity_labels
-lut<-c("1"="WALKING", 
-       "2"="WALKING_UPSTAIRS", 
-       "3"="WALKING_DOWNSTAIRS",
-       "4"="SITTING", 
-       "5"="STANDING",
-       "6"="LAYING")
-#Now apply this function to ActivityLabel in a new column. 
-library(dplyr)
+# 3. Create variables called ActivityLabel and ActivityName that label all observations with the corresponding activity labels and names respectively
+
+#Add Y to averages_df as ActivityLabel variable.
+measurements$ActivityLabel<-Y
+names(measurements[87])
+
+#Apply the activity names in activity_labels to their respective code in Y.
+library(plyr)
+Yfactor<-as.factor(Y$V1)
+
+#Create variable ActivityName with the lut applied to Y.
+measurements$ActivityName<-revalue(Yfactor, c("1"="WALKING", 
+                                                               "2"="WALKING_UPSTAIRS", 
+                                                               "3"="WALKING_DOWNSTAIRS",
+                                                               "4"="SITTING", 
+                                                               "5"="STANDING",
+                                                               "6"="LAYING"))
+names(measurements[88])
+
+# 4. From the data set in step 3, creates a second, independent tidy data set 
+# with the average of each variable for each activity and each subject.
+measurements$Subject<-Subject
+measurements$Subject<-as.vector(measurements$Subject$V1, mode="any")
+measurements$ActivityLabel<-as.vector(measurements$ActivityLabel$V1, mode="any")
+
+Mean_df<-group_by(measurements, Subject, ActivityLabel)
+Mean_df<-summarise_each(Mean_df, funs(mean))
+
+Mean_df$ActivityLabel<-as.character(Mean_df$ActivityLabel)
+Mean_df$ActivityName<-revalue(Mean_df$ActivityLabel, c("1"="WALKING", 
+                                                       "2"="WALKING_UPSTAIRS", 
+                                                       "3"="WALKING_DOWNSTAIRS",
+                                                       "4"="SITTING", 
+                                                       "5"="STANDING",
+                                                       "6"="LAYING")) 
+
+
+
 
