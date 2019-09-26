@@ -27,5 +27,5 @@ subject_test.txt - Contains subject data for X_test respectively.
 Run_anaysis.R is the script used for all preliminary data munging and the above four steps. 
 
 Notes:
-This was very challenging as a beginner-level R project without any coding background. The data sets are very similar and confusing because it's not familiar data unlike the more popular Titanic dataset for example. This took me about a month to complete before it was scrubbed from my course syllabus for being too challenging! I am proud for completing it however. I suggest doing this exercise to get a real taste of what it may be like to work with data that is not your own just like a client could throw at you in a real life setting.
+This was very challenging as a beginner-level R project without any coding background. The data sets are very similar and confusing because it's not familiar data unlike the more popular Titanic dataset for example. This took me about a month to complete before it was scrubbed from my course syllabus for being too challenging! It was estimated to take about one week. I am proud for completing it however. I suggest doing this exercise to get a real taste of what it may be like to work with data that is not your own just like a client could throw at you in a real life setting.
 
