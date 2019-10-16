@@ -11,21 +11,19 @@ The assigment has four main components:
 4) create a separate data set showing the averages of each measurement by subject and activity.
 
 Files:
-The original data set can be found here: archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
-This dataset contains information from a research experiment where 30 subjects practiced 6 different activities with a smartphone attached to them. 
+ The original data set can be found here: archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+ This dataset contains information from a research experiment where 30 human subjects practiced 6 different physical activities such as walking, jogging, standing, with a smartphone attached to them. 
 
-There are 8 files within the data set for use in this assignment.
-features.txt - Holds the variable names for X_test and X-train.
-X_test.txt - Measurements of each activity completed by certain subjects in study test.
-X_train.txt - Measurements of each activity completed by certain subjects in study training.
-y_test.txt - Contains numeric activity data for X_test respectively.
-y_train.txt - Contains numeric activity data for X_train respectively.
-activity_labels.txt - Contains the codes for each activity name.
-subject_train.txt - Contains subject data for X_train respectively.
-subject_test.txt - Contains subject data for X_test respectively.
+There are 8 files within the data set alone for use in this assignment.
+1) features.txt - Holds the variable names for X_test and X-train.
+2) X_test.txt - Measurements of each activity completed by certain subjects in study test.
+3) X_train.txt - Measurements of each activity completed by certain subjects in study training.
+4) y_test.txt - Contains numeric activity data for X_test respectively.
+5) y_train.txt - Contains numeric activity data for X_train respectively.
+6) activity_labels.txt - Contains the codes for each activity name.
+7) subject_train.txt - Contains subject data for X_train respectively.
+8) subject_test.txt - Contains subject data for X_test respectively.
 
 Run_anaysis.R is the script used for all preliminary data munging and the above four steps. 
 
-Notes:
-This was very challenging as a beginner-level R project without any coding background. The data sets are very similar and confusing because it's not familiar data unlike the more popular Titanic dataset for example. This took me about a month to complete before it was scrubbed from my course syllabus for being too challenging! It was estimated to take about one week. I am proud for completing it however. I suggest doing this exercise to get a real taste of what it may be like to work with data that is not your own just like a client could throw at you in a real life setting.
 
