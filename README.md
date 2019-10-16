@@ -1,4 +1,4 @@
-# Data-Wrangling-Exercise
+# Dplyr, Plyr Samsung Data Set
 
 This assignment aims to make use of R and R packages dplyr and plyr for a beginner user using a public dataset (made available by University of California Irvine). This assignment was part of my Springboard Data Analysis Course to demonstrate "data wrangling".  
 
